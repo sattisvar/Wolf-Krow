@@ -1,7 +1,8 @@
 use leptos::*;
-use leptos::prelude::*;
 
 use wasm_bindgen::prelude::*;
+
+use crate::graph_container::GraphContainer;
 
 #[wasm_bindgen]
 extern "C" {
@@ -12,8 +13,7 @@ extern "C" {
 #[component]
 pub fn App() -> impl IntoView {
     view! {
-        <div>
-            <p>Hello World!</p>
-        </div>
+        <GraphContainer>
+        </GraphContainer>
     }
 }
