@@ -13,7 +13,6 @@ extern "C" {
 #[component]
 pub fn App() -> impl IntoView {
     view! {
-        <GraphContainer>
-        </GraphContainer>
+        <GraphContainer />
     }
 }
