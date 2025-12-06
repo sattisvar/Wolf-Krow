@@ -5,12 +5,26 @@ use reactive_stores::{AtKeyed, Store};
 use web_sys::MouseEvent;
 
 #[derive(Clone, Debug)]
+pub struct InputSlot {
+    pub id: usize,
+    pub title: String,
+}
+
+#[derive(Clone, Debug)]
+pub struct OutputSlot {
+    pub id: usize,
+    pub title: String,
+}
+
+#[derive(Clone, Debug)]
 pub struct Node {
     pub id: usize,
     pub x: f64,
     pub y: f64,
     pub label: String,
     pub width: f64,
+    pub input_slot: Vec<InputSlot>,
+    pub output_slot: Vec<OutputSlot>,
 }
 
 #[derive(Store, Clone, Debug)]
@@ -29,27 +43,32 @@ pub fn NodeContainer(
     let node_id = node.read().id;
 
     view! {
-        <div
-            style="position: absolute; background: #16213ea0; border: 2px solid #0f3460; border-radius: 8px; padding: 10px; cursor: move; user-select: none;"
+        <div class="container"
             style:width=move || format!("{}px", node.read().width)
             style:left=move || format!("{}px", node.read().x)
             style:top=move || format!("{}px", node.read().y)
         >
-            <div style="color: #e94560; font-weight: bold; margin-bottom: 8px;">
+            <div class="title">
                 {node.read().label.clone()}
             </div>
+            <div class="input_output_pair">
+                <div class="input_list">
 
-            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                <div
-                    style="width: 16px; height: 16px; background: #64ffda; border-radius: 50%;"
-                    on:mouseup=move |e| on_end_connection(node_id, e)
-                    title="Input"
-                />
-                <div
-                    style="width: 16px; height: 16px; background: #64ffda; border-radius: 50%; cursor: pointer;"
-                    on:mousedown=move |e| on_start_connection(node_id, e)
-                    title="Output - drag to connect"
-                />
+                    <div class="input" title="Input" />
+                    <div class="input" title="Input" />
+                    <div class="input"
+                        on:mouseup=move |e| on_end_connection(node_id, e)
+                        title="Input"
+                    />
+                </div>
+
+                <div class="output_list">
+                    <div class="output" title="Output - drag to connect" />
+                    <div class="output"
+                        on:mousedown=move |e| on_start_connection(node_id, e)
+                        title="Output - drag to connect"
+                    />
+                </div>
             </div>
         </div>
     }

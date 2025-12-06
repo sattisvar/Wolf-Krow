@@ -5,7 +5,7 @@ use leptos::prelude::*;
 use reactive_stores::{Store, StoreFieldIterator};
 use wasm_bindgen::prelude::*;
 
-use crate::node_container::{Node, NodeContainer, NodeStore, NodeStoreStoreFields};
+use crate::node_container::{InputSlot, Node, NodeContainer, NodeStore, NodeStoreStoreFields, OutputSlot};
 
 const PORT_VERTICAL_OFFSET: f64 = 50.0;
 
@@ -41,6 +41,8 @@ pub fn GraphContainer() -> impl IntoView {
                 y: 100.0,
                 width: 150.0,
                 label: "Input".to_string(),
+                input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
+                output_slot: vec![OutputSlot { id: 0, title: "out1".to_string() }, ],
             },
             Node {
                 id: 1,
@@ -48,6 +50,8 @@ pub fn GraphContainer() -> impl IntoView {
                 y: 150.0,
                 width: 150.0,
                 label: "Process".to_string(),
+                input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
+                output_slot: vec![OutputSlot { id: 0, title: "out1".to_string()}, ],
             },
             Node {
                 id: 2,
@@ -55,6 +59,8 @@ pub fn GraphContainer() -> impl IntoView {
                 y: 100.0,
                 width: 150.0,
                 label: "Output".to_string(),
+                input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
+                output_slot: vec![OutputSlot { id: 0, title: "out1".to_string() }, ],
             },
         ],
     });
@@ -167,6 +173,8 @@ pub fn GraphContainer() -> impl IntoView {
             y: 200.0 + (id as f64 * 30.0),
             width: 150.0,
             label: format!("Node {}", id),
+            input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
+            output_slot: vec![OutputSlot { id: 0, title: "out1".to_string() }, ],
         });
     };
 
@@ -201,8 +209,8 @@ pub fn GraphContainer() -> impl IntoView {
                     connections.get().iter().filter_map(|conn| {
                         let from = nodes_map.get(&conn.from)?;
                         let to = nodes_map.get(&conn.to)?;
-                        let x1 = from.x + from.width - 5.0;
-                        let y1 = from.y + PORT_VERTICAL_OFFSET;
+                        let x1 = from.x + from.width + 15.0;
+                        let y1 = from.y + PORT_VERTICAL_OFFSET + 16.0 * 3.0;
                         let x2 = to.x + 5.0;
                         let y2 = to.y + PORT_VERTICAL_OFFSET;
                         let dx = (x2 - x1).abs() * 0.5;
