@@ -5,7 +5,6 @@ use crate::components::ui::dropdown_menu::{
     DropdownMenuItem, DropdownMenuLabel, DropdownMenuLink, DropdownMenuSub, DropdownMenuSubContent,
     DropdownMenuSubItem, DropdownMenuSubTrigger, DropdownMenuTrigger,
 };
-use crate::components::ui::separator::Separator;
 
 #[component]
 pub fn AddNodeButton() -> impl IntoView {
@@ -35,13 +34,10 @@ pub fn AddNodeButton() -> impl IntoView {
                         <DropdownMenuSubContent>
                             <DropdownMenuSubItem>"Export Data"</DropdownMenuSubItem>
                             <DropdownMenuSubItem>"Import Data"</DropdownMenuSubItem>
-                            <Separator class="my-1" />
                             <DropdownMenuSubItem>"Developer Tools"</DropdownMenuSubItem>
                         </DropdownMenuSubContent>
                     </DropdownMenuSub>
                 </DropdownMenuGroup>
-
-                <Separator class="my-1" />
 
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
