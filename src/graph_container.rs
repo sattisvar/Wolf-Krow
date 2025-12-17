@@ -7,7 +7,7 @@ use wasm_bindgen::prelude::*;
 
 use crate::node_container::{InputSlot, Node, NodeContainer, NodeStore, NodeStoreStoreFields, OutputSlot};
 
-const PORT_VERTICAL_OFFSET: f64 = 50.0;
+const PORT_VERTICAL_OFFSET: f64 = 53.0;
 
 #[wasm_bindgen]
 extern "C" {
@@ -18,9 +18,9 @@ extern "C" {
 
 
 #[derive(Clone, Debug)]
-struct Connection {
-    from: usize,
-    to: usize,
+pub struct Connection {
+    pub(crate) from: (usize, usize),
+    pub(crate) to: (usize, usize),
 }
 
 #[derive(Clone, Debug)]
@@ -66,7 +66,7 @@ pub fn GraphContainer() -> impl IntoView {
     });
 
     let (connections, set_connections) = signal(Vec::<Connection>::new());
-    let (connecting_from, set_connecting_from) = signal(None::<usize>);
+    let (connecting_from, set_connecting_from) = signal(None::<(usize, usize)>);
     let (temp_line_end, set_temp_line_end) = signal(None::<(f64, f64)>);
 
     let (drag_state, set_drag_state) = signal(None::<DragState>);
@@ -75,6 +75,11 @@ pub fn GraphContainer() -> impl IntoView {
 
     let (scale, set_scale) = signal(1.0f64);
     
+    provide_context((connecting_from, set_connecting_from));
+    provide_context(set_connections);
+    provide_context(set_drag_state);
+    provide_context(graph_content);
+
     let on_mouse_move = move |e: web_sys::MouseEvent| {
         if let Some(state) = drag_state.get() {
             //set_nodes.update(|nodes| {
@@ -173,8 +178,8 @@ pub fn GraphContainer() -> impl IntoView {
             y: 200.0 + (id as f64 * 30.0),
             width: 150.0,
             label: format!("Node {}", id),
-            input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
-            output_slot: vec![OutputSlot { id: 0, title: "out1".to_string() }, ],
+            input_slot: vec!["in1".to_string()],
+            output_slot: vec!["out1".to_string()],
         });
     };
 
@@ -207,12 +212,12 @@ pub fn GraphContainer() -> impl IntoView {
                     let binding = nodes_store.rows();
                     let nodes_map: HashMap<usize, Node> = binding.iter_unkeyed().map(|n| (n.read().id, n.get())).collect();
                     connections.get().iter().filter_map(|conn| {
-                        let from = nodes_map.get(&conn.from)?;
-                        let to = nodes_map.get(&conn.to)?;
+                        let from = nodes_map.get(&conn.from.0)?;
+                        let to = nodes_map.get(&conn.to.0)?;
                         let x1 = from.x + from.width + 15.0;
-                        let y1 = from.y + PORT_VERTICAL_OFFSET + 16.0 * 3.0;
+                        let y1 = from.y + PORT_VERTICAL_OFFSET + 22.0 * (conn.from.1 as f64);
                         let x2 = to.x + 5.0;
-                        let y2 = to.y + PORT_VERTICAL_OFFSET;
+                        let y2 = to.y + PORT_VERTICAL_OFFSET + 22.0 * (conn.to.1 as f64);
                         let dx = (x2 - x1).abs() * 0.5;
                         let path = format!("M {} {} C {} {}, {} {}, {} {}",
                             x1, y1, x1 + dx, y1, x2 - dx, y2, x2, y2);
@@ -231,10 +236,10 @@ pub fn GraphContainer() -> impl IntoView {
                 {move || {
                     if let (Some(from_id), Some((end_x, end_y))) = (connecting_from.get(), temp_line_end.get()) {
                         let nodes_val = nodes_store.rows();
-                        nodes_val.iter_unkeyed().find(|n| n.read().id == from_id).map(|from| {
+                        nodes_val.iter_unkeyed().find(|n| n.read().id == from_id.0).map(|from| {
                             let from = from.get();
-                            let x1 = from.x + from.width - 5.0;
-                            let y1 = from.y + PORT_VERTICAL_OFFSET;
+                            let x1 = from.x + from.width + 15.0;
+                            let y1 = from.y + PORT_VERTICAL_OFFSET + 22.0 * (from_id.1 as f64);
                             let dx = (end_x - x1).abs() * 0.5;
                             let path = format!("M {} {} C {} {}, {} {}, {} {}",
                                 x1, y1, x1 + dx, y1, end_x - dx, end_y, end_x, end_y);

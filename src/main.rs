@@ -1,3 +1,4 @@
+mod components;
 mod app;
 mod graph_container;
 mod node_container;

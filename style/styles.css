@@ -1,3 +1,5 @@
+@import "./tailwind.css";
+
 .container {
     position: absolute;
     background: #16213ea0;

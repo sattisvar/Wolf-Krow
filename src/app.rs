@@ -1,5 +1,5 @@
 use leptos::*;
-
+use leptos::prelude::*;
 use wasm_bindgen::prelude::*;
 
 use crate::graph_container::GraphContainer;
