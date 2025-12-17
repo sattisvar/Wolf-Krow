@@ -22,7 +22,7 @@ target
 
 /dist/
 /target/
-/Cargo.lock
+Cargo.lock
 
 /node_modules/
 output.css
