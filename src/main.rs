@@ -1,5 +1,6 @@
-mod components;
+mod add_node_button;
 mod app;
+mod components;
 mod graph_container;
 mod node_container;
 

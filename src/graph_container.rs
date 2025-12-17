@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 
-use leptos::*;
 use leptos::prelude::*;
+use leptos::*;
 use reactive_stores::{Store, StoreFieldIterator};
 use wasm_bindgen::prelude::*;
 
+use crate::add_node_button::AddNodeButton;
 use crate::node_container::{Node, NodeContainer, NodeStore, NodeStoreStoreFields};
 
 const PORT_VERTICAL_OFFSET: f64 = 53.0;
@@ -14,8 +15,6 @@ extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
-
-
 
 #[derive(Clone, Debug)]
 pub struct Connection {
@@ -29,7 +28,6 @@ pub struct DragState {
     offset_x: f64,
     offset_y: f64,
 }
-
 
 #[component]
 pub fn GraphContainer() -> impl IntoView {
@@ -60,7 +58,7 @@ pub fn GraphContainer() -> impl IntoView {
                 width: 150.0,
                 label: "Output".to_string(),
                 input_slot: vec!["in1".to_string()],
-                output_slot: vec!["out1".to_string() ],
+                output_slot: vec!["out1".to_string()],
             },
         ],
     });
@@ -74,7 +72,7 @@ pub fn GraphContainer() -> impl IntoView {
     let next_id = RwSignal::new(3usize);
 
     let (scale, set_scale) = signal(1.0f64);
-    
+
     provide_context((connecting_from, set_connecting_from));
     provide_context(set_connections);
     provide_context(set_drag_state);
@@ -97,8 +95,6 @@ pub fn GraphContainer() -> impl IntoView {
             set_temp_line_end.set(Some((e.client_x() as f64, e.client_y() as f64)));
         }
     };
-
-    
 
     let on_focus_out = move |_e: web_sys::FocusEvent| {
         set_drag_state.set(None);
@@ -170,6 +166,7 @@ pub fn GraphContainer() -> impl IntoView {
             style:marginTop=move || format!("{}vh", (scale.get() - 1.0) * 50.0)
             style:marginLeft=move || format!("{}vw", (scale.get() - 1.0) * 50.0)
         >
+            <AddNodeButton/>
             <button
                 on:click=add_node
                 style="position: absolute; top: 10px; left: 10px; z-index: 1000; padding: 10px 20px; background: #4a5568; color: white; border: none; border-radius: 4px; cursor: pointer;"
@@ -243,7 +240,7 @@ pub fn GraphContainer() -> impl IntoView {
 
                     // console_log(format!("doing node {:?}", node).as_str());
                     view!{
-                        <NodeContainer 
+                        <NodeContainer
                             node=node
                             on:mousedown=move |e| on_mouse_down(node_id, e)
                             on:mouseup=on_mouse_up
