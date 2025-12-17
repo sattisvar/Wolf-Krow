@@ -5,7 +5,7 @@ use leptos::prelude::*;
 use reactive_stores::{Store, StoreFieldIterator};
 use wasm_bindgen::prelude::*;
 
-use crate::node_container::{InputSlot, Node, NodeContainer, NodeStore, NodeStoreStoreFields, OutputSlot};
+use crate::node_container::{Node, NodeContainer, NodeStore, NodeStoreStoreFields};
 
 const PORT_VERTICAL_OFFSET: f64 = 53.0;
 
@@ -143,29 +143,6 @@ pub fn GraphContainer() -> impl IntoView {
         set_connecting_from.set(None);
 
         // console_log("mouse up");
-    };
-
-    let start_connection = move |node_id: usize, e: web_sys::MouseEvent| {
-        e.stop_propagation();
-        set_connecting_from.set(Some(node_id));
-        // console_log("Start connection");
-    };
-
-    let end_connection = move |node_id: usize, e: web_sys::MouseEvent| {
-        e.stop_propagation();
-        if let Some(from_id) = connecting_from.get() {
-            if from_id != node_id {
-                set_connections.update(|conns| {
-                    conns.push(Connection {
-                        from: from_id,
-                        to: node_id,
-                    });
-                });
-            }
-            set_connecting_from.set(None);
-        }
-        set_drag_state.set(None);
-        // console_log("End connection");
     };
 
     let add_node = move |_| {
