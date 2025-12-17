@@ -24,7 +24,7 @@ pub struct Connection {
 }
 
 #[derive(Clone, Debug)]
-struct DragState {
+pub struct DragState {
     node_id: usize,
     offset_x: f64,
     offset_y: f64,
@@ -41,8 +41,8 @@ pub fn GraphContainer() -> impl IntoView {
                 y: 100.0,
                 width: 150.0,
                 label: "Input".to_string(),
-                input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
-                output_slot: vec![OutputSlot { id: 0, title: "out1".to_string() }, ],
+                input_slot: vec!["in1".to_string()],
+                output_slot: vec!["out1".to_string()],
             },
             Node {
                 id: 1,
@@ -50,8 +50,8 @@ pub fn GraphContainer() -> impl IntoView {
                 y: 150.0,
                 width: 150.0,
                 label: "Process".to_string(),
-                input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
-                output_slot: vec![OutputSlot { id: 0, title: "out1".to_string()}, ],
+                input_slot: vec!["in1".to_string()],
+                output_slot: vec!["out1".to_string()],
             },
             Node {
                 id: 2,
@@ -59,8 +59,8 @@ pub fn GraphContainer() -> impl IntoView {
                 y: 100.0,
                 width: 150.0,
                 label: "Output".to_string(),
-                input_slot: vec![InputSlot { id: 0, title: "in1".to_string() }, ],
-                output_slot: vec![OutputSlot { id: 0, title: "out1".to_string() }, ],
+                input_slot: vec!["in1".to_string()],
+                output_slot: vec!["out1".to_string() ],
             },
         ],
     });
@@ -78,7 +78,6 @@ pub fn GraphContainer() -> impl IntoView {
     provide_context((connecting_from, set_connecting_from));
     provide_context(set_connections);
     provide_context(set_drag_state);
-    provide_context(graph_content);
 
     let on_mouse_move = move |e: web_sys::MouseEvent| {
         if let Some(state) = drag_state.get() {
@@ -269,8 +268,6 @@ pub fn GraphContainer() -> impl IntoView {
                     view!{
                         <NodeContainer 
                             node=node
-                            on_start_connection=start_connection
-                            on_end_connection=end_connection
                             on:mousedown=move |e| on_mouse_down(node_id, e)
                             on:mouseup=on_mouse_up
                         >

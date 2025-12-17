@@ -4,6 +4,8 @@ use leptos::prelude::*;
 use reactive_stores::{AtKeyed, Store};
 use web_sys::MouseEvent;
 
+use crate::graph_container::{Connection, DragState};
+
 #[derive(Clone, Debug)]
 pub struct InputSlot {
     pub id: usize,
